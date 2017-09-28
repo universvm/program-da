@@ -52,7 +52,9 @@ def main(inValues):
             # Result:
             print(result1, result2)    
         except ZeroDivisionError: # Linear equation
-            print(-c/b)
+            result = -c/b
+
+            print(result)
     else: # 2 Imaginary solutions
         negB_2a = -b/(2*a)
 
