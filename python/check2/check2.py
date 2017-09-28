@@ -14,7 +14,7 @@ import math
 def discr_calc(a, b, c):
     """ Calculates the discriminant using a, b and c"""
 
-    discriminant = "Do the math"
+    discriminant = b**2-4*a*c
 
     return(discriminant)
 
@@ -38,17 +38,29 @@ def main(inValues):
     # Calling function to calculate discriminant:
     d = discr_calc(a, b, c)
 
-    # Calculating -b/2a
-    negB_2a = -b/(2*a)
-
     # If/Else for number of solutions from d:
     if d == float(0): # One real number solution
-        return(negB_2a*d)
+        result = (-b+math.sqrt(d))/(2*a)
+
+        # Result:
+        print(result)
     elif d > 0: # Two real solutions
-        return(negB_2a*d, negB_2a*-d)    
+        try:
+            result1 = (-b+math.sqrt(d))/(2*a)
+            result2 = (-b-math.sqrt(d))/(2*a)
+
+            # Result:
+            print(result1, result2)    
+        except ZeroDivisionError: # Linear equation
+            print(-c/b)
     else: # 2 Imaginary solutions
-        # TODO: Changing d into i
-        return('{0} +/- {1}'.format(negB_2a, d))
+        negB_2a = -b/(2*a)
+
+        #Change d to positive to calculate the root
+        d_2a = math.sqrt(-d)/(2*a)
+
+        # Result:
+        print('{0} +/- {1}i'.format(negB_2a, d_2a))
 
 # Asking user for input:
 main(input("Write the values of a, b and c separated by comma (no spaces): "))
