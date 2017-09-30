@@ -43,18 +43,18 @@ def main(inValues):
         result = (-b+math.sqrt(d))/(2*a)
 
         # Result:
-        print(result)
+        return(result)
     elif d > 0: # Two real solutions
         try:
             result1 = (-b+math.sqrt(d))/(2*a)
             result2 = (-b-math.sqrt(d))/(2*a)
 
             # Result:
-            print(result1, result2)    
+            return(result1, result2)    
         except ZeroDivisionError: # Linear equation
             result = -c/b
 
-            print(result)
+            return(result)
     else: # 2 Imaginary solutions
         negB_2a = -b/(2*a)
 
@@ -62,7 +62,7 @@ def main(inValues):
         d_2a = math.sqrt(-d)/(2*a)
 
         # Result:
-        print('{0} +/- {1}i'.format(negB_2a, d_2a))
+        return('{0} +/- {1}i'.format(negB_2a, d_2a))
 
 # Asking user for input:
-main(input("Write the values of a, b and c separated by comma (no spaces): "))
+print(main(input("Write the values of a, b and c separated by comma (no spaces): ")))
