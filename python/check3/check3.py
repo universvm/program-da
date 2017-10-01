@@ -8,60 +8,84 @@
 
 # Modules:
 import math
-
+import matplotlib.pyplot as plt
 
 # Functions:
+def graph_plotter(x,y):
+    plt.plot(x,y)
+    plt.show()
+
 def damp_state(omega_zero, gamma):
-    """ Calculates the value of b with damp state (over damped, critically damped and under damped) using omega_zero and gamma"""
+    """ Calculates the value of b with damp state (over damped, critically damped and under damped) using omega_zero and gamma."""
 
     if gamma > 2*omega_zero: # Over Damped
-    	b = gamma/(2*math.sqrt((gamma**2/4)-omega_zero**2))
+        b = gamma/(2*math.sqrt((gamma**2/4)-omega_zero**2))
 
-		return(b, True)
-	elif gamma == 2*omega_zero: # Critically Damped
-		b = gamma/2
+        return(b, True)
+    elif gamma == 2*omega_zero: # Critically Damped
+        b = gamma/2
 
-		return(b, None)
-	else: # Under Damped
-		 b = gamma/(2*math.sqrt(omega_zero**2-(gamma**2/4)))
+        return(b, None)
+    else: # Under Damped
+        b = gamma/(2*math.sqrt(omega_zero**2-(gamma**2/4)))
 
-		 return(b, False)
+        return(b, False)
 
-def shm(omega_zero,gamma,t):
+def shm(omega_zero,gamma,timeList):
     """ Calculates displacement using the quadratic equation."""
 
-    # Calling function to calculate discriminant:
-    d = discr_calc(a, b, c)
+    # Lists:
+    dispList = []
 
-    # If/Else for number of solutions from d:
-    if d == float(0): # One real number solution
-        result = (-b+math.sqrt(d))/(2*a)
+    # Calling function to calculate damp state:
+    damp = damp_state(omega_zero,gamma) #Returns b and True (Over), None (Critically), False (Under)
 
-        # Result:
-        return(result)
-    elif d > 0: # Two real solutions
-        try:
-            result1 = (-b+math.sqrt(d))/(2*a)
-            result2 = (-b-math.sqrt(d))/(2*a)
+    # If/Else to decide equation for displacement:
+    if damp[1] == True: # Over Damped
+        p = math.sqrt((gamma**2/4)-omega_zero**2)
 
-            # Result:
-            return(result1, result2)    
-        except ZeroDivisionError: # Linear equation
-            result = -c/b
+        # For loop to solve for displacement and add it to dispList:
+        for time in timeList:
+            dispList.append(math.exp(-gamma*time/2)*(math.cosh(p*time)+damp[0]*math.sinh(p*time)))
 
-            return(result)
-    else: # 2 Imaginary solutions
-        negB_2a = -b/(2*a)
+    elif damp[1] == None: # Under Damped
+        # For loop to solve for displacement and add it to dispList:
+        for time in timeList:
+            dispList.append(math.exp(-gamma*time/2)*(1+damp[0]*time))
 
-        #Change d to positive to calculate the root
-        d_2a = math.sqrt(-d)/(2*a)
+    else:
+        w = math.sqrt(omega_zero**2-(gamma**2/4))
 
-        # Result:
-        return('{0} +/- {1}i'.format(negB_2a, d_2a))
+        # For loop to solve for displacement and add it to dispList:
+        for time in timeList:
+            dispList.append(math.exp(-gamma*time/2)*(math.cosh(w*time)+damp[0]*math.sinh(w*time)))
 
-TODO: MAIN Function with 
-    # Printing the details to the user:
-    print("Your values are:\n gamma = {0}; omega_zero = {1}".format(omega_zero, gamma)) 
-    and calling smh
+    return(dispList)
+
+def main(userInput):
+    """ Calculates t and calls functions to calculate displacement, amplitude and damp state. """
+
+    # List:
+    timeList = [0] # Starting with 0
+
+    # User Input:
+    userInput = userInput.split(',')
+    omega_zero = float(userInput[0])
+    gamma = float(userInput[1])
+
+    # Calculating interval:
+    interval = (5*math.pi)/math.sqrt(omega_zero)
+
+    # Calculating t:
+    while len(timeList) < 200: # Create up to 200 values
+        timeList.append(timeList[-1]+interval) # Adding interval to the last value in list
+
+    # TODO: create function for amplitude (probably with y axis)
+    dispList = shm(omega_zero,gamma,timeList)
+
+    # Plotting the graph:
+    graph_plotter(timeList,dispList)
+    print(timeList,dispList)
+    
 # Asking user for input:
-print(main(input("Write the values of a, b and c separated by comma (no spaces): ")))
+main(input("Write the values of gamma and omega_zero separated by comma (no spaces): "))
