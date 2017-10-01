@@ -74,7 +74,7 @@ def main(userInput):
     gamma = float(userInput[1])
 
     # Calculating interval:
-    interval = (5*math.pi)/math.sqrt(omega_zero)
+    interval = ((5*math.pi)/omega_zero)/200
 
     # Calculating t:
     while len(timeList) < 200: # Create up to 200 values
@@ -85,7 +85,6 @@ def main(userInput):
 
     # Plotting the graph:
     graph_plotter(timeList,dispList)
-    print(timeList,dispList)
-    
+
 # Asking user for input:
 main(input("Write the values of gamma and omega_zero separated by comma (no spaces): "))
