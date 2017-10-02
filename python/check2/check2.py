@@ -22,7 +22,7 @@ def main(inValues):
     """ Calculates x using the quadratic equation."""
 
     # Split input by comma:
-    inValues = inValues.split(",")
+    inValues = str(inValues).split(",")
 
     # Defining a, b and c + conversion to float:
     if len(inValues) == 3:
