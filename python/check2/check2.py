@@ -20,9 +20,12 @@ def discr_calc(a, b, c):
 
 def main(inValues):
     """ Calculates x using the quadratic equation."""
-
+    
+    # Convert to str and removing parenthesis (Python2): 
+    inValues = str(inValues).strip("(").strip(")")
+    
     # Split input by comma:
-    inValues = str(inValues).split(",")
+    inValues = inValues.split(",")
 
     # Defining a, b and c + conversion to float:
     if len(inValues) == 3:
