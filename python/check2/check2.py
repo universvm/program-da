@@ -24,6 +24,7 @@ def main(inValues):
     # Convert to str and removing parenthesis (Python2): 
     inValues = str(inValues).strip("(").strip(")")
     
+
     # Split input by comma:
     inValues = inValues.split(",")
 
