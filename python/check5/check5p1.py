@@ -14,31 +14,47 @@ def graph_plotter(x,y):
     plt.plot(x,y)
 
     # Adding title: 
-    plt.title("Log power of a circuit measured at 25 kHz")
+    plt.title("Projectile Motion Trajectory")
 
     # Adding labels for axes:    
-    plt.xlabel("Time")
-    plt.ylabel("Power")
+    plt.xlabel("Displacement x (m)")
+    plt.ylabel("Displacement y (m)")
 
     # Show plot:
     plt.show()
 
-def step_forward(x,y,vx,vy,beta,delta_t):
+def step_forward(vx,vy,beta,delta_t,td):
     """   Do a forward step. """
-    return x,y,vx,vy
 
-def acceleration(vx,vy,beta):
-    """ Calculate the acceleration. """
-    # needed for the calculation of Vy as Vx is constant.
-    return(ax,ay)    
+    # Lists:
+    dispListX = [0] # Initial x and y = 0 as x or y = t * Vx or Vy = 0 * Vx or Vy = 0
+    dispListY = [0]
+    
+    # Defining temporary variable for while loop:
+    t = 0 # initial time = 0
+
+    # While loop to iterate until t = td (i.e. projectile touches the floor):
+    while t < td:
+        # Euler methods for x and y:
+        x = dispListX[-1]+delta_t*vx
+        y = dispListY[-1]+delta_t*vy-9.81*t #Accounting for -gt
+
+        # Append to lists:
+        dispListX.append(x)
+        dispListY.append(y)
+
+        # Add time interval to t:
+        t = t + delta_t
+
+    return(dispListX,dispListY)
 
 def calc_range(vx,vy):
-    """ Calculating time to reach the ground and range. """
+    """ Calculate time to reach the ground and range. """
      
     # Calculate time to reach ground (x = 0):
     td = (2*vy)/9.81
 
-    # Calculating range: 
+    # Calculate range: 
     range_dist = td*vx
 
     return(td,range_dist)
@@ -62,10 +78,6 @@ def main(userInput):
 	 # User Input:
     userInput = userInput.split(',')
 
-    # Lists:
-    DispListX = [0] # Initial x and y = 0 as x or y = t * Vx or Vy = 0 * Vx or Vy = 0
-    DispListY = [0]
-
     # Converting values to float:
     v_initial = float(userInput[0])
     theta = float(userInput[1])
@@ -81,15 +93,11 @@ def main(userInput):
     # Printing range:
     print("The range is {0} meters".format(range_dist))
 
-    # Defining temporary variable for while loop:
-    t = 0 # initial time = 0
-
-    # While loop to iterate until t = td (i.e. projectile touches the floor):
-    while t < td:
-        acceleration()
+    # Step forward until the projectile touches the floor (td):
+    dispListX,dispListY = step_forward(vx,vy,beta,delt_t,td)
 
     # Plotting the graph:
-    graph_plotter(timeList,powList)
+    graph_plotter(dispListX,dispListY)
 
 # Asking user for input:
 if __name__ == '__main__':
