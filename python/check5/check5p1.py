@@ -23,7 +23,7 @@ def graph_plotter(x,y):
     # Show plot:
     plt.show()
 
-def step_forward(vx,vy,beta,delta_t,td):
+def step_forward(vx,vy,ax,ay,delta_t,td):
     """   Do a forward step. """
 
     # Lists:
@@ -36,8 +36,8 @@ def step_forward(vx,vy,beta,delta_t,td):
     # While loop to iterate until t = td (i.e. projectile touches the floor):
     while t < td:
         # Euler methods for x and y:
-        x = dispListX[-1]+delta_t*vx
-        y = dispListY[-1]+delta_t*(vy-9.81*t) #Accounting for -gt
+        x = dispListX[-1]+delta_t*(vx+ax*t)
+        y = dispListY[-1]+delta_t*(vy+ay*t) #Accounting for -gt
 
         # Append to lists:
         dispListX.append(x)
@@ -47,6 +47,20 @@ def step_forward(vx,vy,beta,delta_t,td):
         t = t + delta_t
 
     return(dispListX,dispListY)
+
+def calc_acc(vx,vy,beta):
+    """ Calculate horizontal and vertical acceleration. """
+
+    # Calculate magnitude of velocity:
+    vmag = math.sqrt((vx**2)+(vy**2))
+
+    # Calculate ax:
+    ax = -beta*vmag*vx
+
+    # Calculate ay:
+    ay = -beta*vmag*vy-9.81
+
+    return(ax,ay)
 
 def calc_range(vx,vy):
     """ Calculate time to reach the ground and range. """
@@ -90,8 +104,11 @@ def main(userInput):
     # Printing range:
     print("The range is {0} meters".format(range_dist))
 
+    # Calculate acceleration:
+    ax,ay = calc_acc(vx,vy,beta)
+
     # Step forward until the projectile touches the floor (td):
-    dispListX,dispListY = step_forward(vx,vy,beta,delta_t,td)
+    dispListX,dispListY = step_forward(vx,vy,ax,ay,delta_t,td)
 
     # Plotting the graph:
     graph_plotter(dispListX,dispListY)
