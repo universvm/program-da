@@ -37,7 +37,7 @@ def step_forward(vx,vy,beta,delta_t,td):
     while t < td:
         # Euler methods for x and y:
         x = dispListX[-1]+delta_t*vx
-        y = dispListY[-1]+delta_t*vy-9.81*t #Accounting for -gt
+        y = dispListY[-1]+delta_t*(vy-9.81*t) #Accounting for -gt
 
         # Append to lists:
         dispListX.append(x)
@@ -57,6 +57,7 @@ def calc_range(vx,vy):
     # Calculate range: 
     range_dist = td*vx
 
+    # Return td and range:
     return(td,range_dist)
 
 def calc_initial(v_initial,theta):
@@ -65,10 +66,6 @@ def calc_initial(v_initial,theta):
     # Calculate velocity x and y:
     vx = v_initial*math.cos(theta)
     vy = v_initial*math.sin(theta)
-
-    # # Calcualte displacement x and y:
-    # x = 0 # as x = t * Vx = 0 * Vx = 0
-    # y = 0 
 
     return(vx,vy)
 
@@ -80,7 +77,7 @@ def main(userInput):
 
     # Converting values to float:
     v_initial = float(userInput[0])
-    theta = float(userInput[1])
+    theta = float(userInput[1])*math.pi/180 # Converting Theta to radians
     beta = float(userInput[2])
     delta_t = float(userInput[3])    
 
@@ -94,7 +91,7 @@ def main(userInput):
     print("The range is {0} meters".format(range_dist))
 
     # Step forward until the projectile touches the floor (td):
-    dispListX,dispListY = step_forward(vx,vy,beta,delt_t,td)
+    dispListX,dispListY = step_forward(vx,vy,beta,delta_t,td)
 
     # Plotting the graph:
     graph_plotter(dispListX,dispListY)
