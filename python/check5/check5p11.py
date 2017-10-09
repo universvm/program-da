@@ -1,6 +1,6 @@
 """
     CheckPoint5: Practical Physics 
-	To write a Python program  to display the trajectory and the second to display the relation between final kinetic energy and launch angle.
+    To write a Python program  to display the trajectory and the second to display the relation between final kinetic energy and launch angle.
 
     Author: Leonardo Castorina
 """
@@ -23,47 +23,35 @@ def graph_plotter(x,y):
     # Show plot:
     plt.show()
 
-def step_forward(vx,vy,ax,ay,delta_t,td):
-    """   Do a forward step. """
-
-    # Lists:
-    dispListX = [0] # Initial x and y = 0 as x or y = t * Vx or Vy = 0 * Vx or Vy = 0
-    dispListY = [0]
-    
-    # Defining temporary variable for while loop:
-    t = 0 # initial time = 0
-
-    # While loop to iterate until t = td (i.e. projectile touches the floor):
-    while t < td:
-        # Euler methods for x and y:
-        x = dispListX[-1]+delta_t*(vx+ax*t)
-        y = dispListY[-1]+delta_t*(vy+ay*t) #Accounting for -gt
-        
-        # Append to lists:
-        dispListX.append(x)
-        dispListY.append(y)
-
-        # Add time interval to t:
-        t = t + delta_t
-
-    return(dispListX,dispListY)
-
 def calc_acc(vx,vy,beta):
     """ Calculate horizontal and vertical acceleration. """
 
     # Calculate magnitude of velocity:
-    print(vx,vy)
     vmag = math.sqrt((vx**2)+(vy**2))
-    print(vmag)
 
     # Calculate ax:
     ax = -beta*(vmag**2)*vx
-    print(ax)
 
     # Calculate ay:
     ay = -beta*(vmag**2)*vy-9.81
 
     return(ax,ay)
+
+def step_forward(x,y,vx,vy,beta,delta_t):
+    """   Do a forward step """
+
+    # Calculate the acceleration of the previous step:
+    ax,ay = calc_acc(vx,vy,beta)
+
+    # Calculate the new vx and vy: 
+    vx = vx+ax*delta_t
+    vy = vy+ay*delta_t
+
+    # Calculate the new x and y: 
+    x = x+delta_t*vx
+    y = y+delta_t*vy #Accounting for -gt
+
+    return(x,y,vx,vy)
 
 def calc_range(vx,vy):
     """ Calculate time to reach the ground and range. """
@@ -87,9 +75,9 @@ def calc_initial(v_initial,theta):
     return(vx,vy)
 
 def main(userInput):
-    """ Calls functions to parse data input, and calls graph plotter. """
-
-	 # User Input:
+    """    Main program to read in from terminal, do itteration, and plot out graph """
+    
+    # User Input:
     userInput = userInput.split(',')
 
     # Converting values to float:
@@ -101,17 +89,29 @@ def main(userInput):
     # Calculating initial conditions:
     vx,vy = calc_initial(v_initial,theta)
 
-    # Calculating range: 
-    td,range_dist = calc_range(vx,vy)
+    # Displacement lists:
+    dispListX = [0]
+    dispListY = [0]
 
-    # Printing range:
-    print("The range is {0} meters".format(range_dist))
+    # First step: 
+    x,y,vx,vy = step_forward(dispListX[-1],dispListY[-1],vx,vy,beta,delta_t)
 
-    # Calculate acceleration:
-    ax,ay = calc_acc(vx,vy,beta)
+    # Appending X and Y values from first step: 
+    dispListX.append(x)
+    dispListY.append(y)
 
-    # Step forward until the projectile touches the floor (td):
-    dispListX,dispListY = step_forward(vx,vy,ax,ay,delta_t,td)
+    # Continue steps until it touches the floor (y = 0):
+    while dispListY[-1] > 0: 
+
+        # Doing a step forward:
+        x,y,vx,vy = step_forward(x,y,vx,vy,beta,delta_t)
+
+        # Appending to lists: 
+        dispListX.append(x)
+        dispListY.append(y)
+
+    # Printing range: (x value when y = 0)
+    print("The range is {0} meters".format(dispListX[-1]))
 
     # Plotting the graph:
     graph_plotter(dispListX,dispListY)
@@ -119,5 +119,3 @@ def main(userInput):
 # Asking user for input:
 if __name__ == '__main__':
     main(input("Write the magnitude of the initial velocity (m/s), angle (degrees), drag coefficient, step interval (s). Comma separated (no spaces): "))
-
-		
