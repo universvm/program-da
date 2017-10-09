@@ -18,8 +18,8 @@ def graph_plotter(x,y):
     plt.title("Log power of a circuit measured at 25 kHz")
 
     # Adding labels for axes:    
-    plt.xlabel("Time")
-    plt.ylabel("Power")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Power (log (power))")
 
     # Show plot:
     plt.show()
