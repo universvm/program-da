@@ -14,11 +14,11 @@ def graph_plotter(x,y):
     plt.plot(x,y)
 
     # Adding title: 
-    plt.title("Projectile Motion Trajectory")
+    plt.title("Projectile Motion Kinetic Energy Ratio over different values of Theta")
 
     # Adding labels for axes:    
-    plt.xlabel("Displacement x (m)")
-    plt.ylabel("Displacement y (m)")
+    plt.xlabel("Theta (radians)")
+    plt.ylabel("Ratio of Kf/Ki")
 
     # Show plot:
     plt.show()
@@ -51,8 +51,6 @@ def step_forward(x,y,vx,vy,beta,delta_t):
     x = x+delta_t*vx
     y = y+delta_t*vy #Accounting for -gt
 
-    print(vx,vy,x,y)
-    
     return(x,y,vx,vy)
 
 def calc_initial(v_initial,theta):
@@ -72,39 +70,53 @@ def main(userInput):
 
     # Converting values to float:
     v_initial = float(userInput[0])
-    theta = float(userInput[1])*math.pi/180 # Converting Theta to radians
-    beta = float(userInput[2])
-    delta_t = float(userInput[3])    
+    beta = float(userInput[1])
+    delta_t = float(userInput[2])    
 
-    # Calculating initial conditions:
-    vx,vy = calc_initial(v_initial,theta)
+    # Lists: 
+    kineticList = []
+    thetaList = []
 
-    # Displacement lists:
-    dispListX = [0]
-    dispListY = [0]
+    # Theta initial: 
+    theta = 0 
 
-    # First step (with previous x and y: 
-    x,y,vx,vy = step_forward(dispListX[-1],dispListY[-1],vx,vy,beta,delta_t)
+    # While theta is less than 90 degrees: 
+    while theta < math.pi/2: 
+        # Calculating initial conditions:
+        vxi,vyi = calc_initial(v_initial,theta)
+        # Initial displacement:
+        x = 0
+        y = 0
 
-    # Appending X and Y values from first step: 
-    dispListX.append(x)
-    dispListY.append(y)
+        # First step (with previous x and y: 
+        x,y,vxf,vyf = step_forward(x,y,vxi,vyi,beta,delta_t)
 
-    # Continue steps until it touches the floor (y = 0):
-    while dispListY[-1] > 0: 
+        # Continue steps until it touches the floor (y = 0):
+        if theta == 0: 
+            # Initially projectile does not lift off the ground
+            vxf = vxi
+            vyf = vyi
+        else:    
+            while y > 0: 
+                # Doing a step forward:
+                x,y,vxf,vyf = step_forward(x,y,vxf,vyf,beta,delta_t)
 
-        # Doing a step forward:
-        x,y,vx,vy = step_forward(x,y,vx,vy,beta,delta_t)
+        # Calculating the Kf and Ki:
+        kf = vxi**2+vyi**2
+        ki = vxf**2+vyf**2
 
-        # Appending to lists: 
-        dispListX.append(x)
-        dispListY.append(y)
+        # Calculating the Kf/Ki:
+        ratio_kfki = kf/ki
 
-    # Printing range: (x value when y = 0)
-    print("The range is {0} meters".format(dispListX[-1]))
+        # Appending to list: 
+        kineticList.append(ratio_kfki)
+        thetaList.append(theta)
+
+        # Incrementing theta for while loop
+        theta = theta + math.pi/10
 
     # Plotting the graph:
-    graph_plotter(dispListX,dispListY)
+    graph_plotter(thetaList,kineticList)
 
 # Asking user for input:
 if __name__ == '__main__':
