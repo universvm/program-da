@@ -113,7 +113,7 @@ def main(userInput):
         thetaList.append(theta)
 
         # Incrementing theta for while loop
-        theta = theta + math.pi/10
+        theta = theta + math.pi/40
 
     # Plotting the graph:
     graph_plotter(thetaList,kineticList)
