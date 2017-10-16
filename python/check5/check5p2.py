@@ -30,10 +30,10 @@ def calc_acc(vx,vy,beta):
     vmag = math.sqrt((vx**2)+(vy**2))
 
     # Calculate ax:
-    ax = -beta*(vmag**2)*vx
+    ax = -beta*vmag*vx
 
     # Calculate ay:
-    ay = -beta*(vmag**2)*vy-9.81
+    ay = -beta*vmag*vy-9.81
 
     return(ax,ay)
 
@@ -49,7 +49,7 @@ def step_forward(x,y,vx,vy,beta,delta_t):
 
     # Calculate the new x and y: 
     x = x+delta_t*vx
-    y = y+delta_t*vy #Accounting for -gt
+    y = y+delta_t*vy
 
     return(x,y,vx,vy)
 
@@ -84,6 +84,7 @@ def main(userInput):
     while theta < math.pi/2: 
         # Calculating initial conditions:
         vxi,vyi = calc_initial(v_initial,theta)
+       
         # Initial displacement:
         x = 0
         y = 0
@@ -113,7 +114,7 @@ def main(userInput):
         thetaList.append(theta)
 
         # Incrementing theta for while loop
-        theta = theta + math.pi/40
+        theta = theta + math.pi/70
 
     # Plotting the graph:
     graph_plotter(thetaList,kineticList)

@@ -30,10 +30,10 @@ def calc_acc(vx,vy,beta):
     vmag = math.sqrt((vx**2)+(vy**2))
 
     # Calculate ax:
-    ax = -beta*(vmag**2)*vx
+    ax = -beta*vmag*vx
 
     # Calculate ay:
-    ay = -beta*(vmag**2)*vy-9.81
+    ay = -beta*vmag*vy-9.81
 
     return(ax,ay)
 
@@ -49,7 +49,7 @@ def step_forward(x,y,vx,vy,beta,delta_t):
 
     # Calculate the new x and y: 
     x = x+delta_t*vx
-    y = y+delta_t*vy #Accounting for -gt
+    y = y+delta_t*vy 
     
     return(x,y,vx,vy)
 
