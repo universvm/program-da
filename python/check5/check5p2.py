@@ -102,11 +102,11 @@ def main(userInput):
                 x,y,vxf,vyf = step_forward(x,y,vxf,vyf,beta,delta_t)
 
         # Calculating the Kf and Ki:
-        kf = vxi**2+vyi**2
-        ki = vxf**2+vyf**2
+        kf = vxf**2+vyf**2
+        ki = vxi**2+vyi**2
 
         # Calculating the Kf/Ki:
-        ratio_kfki = kf/ki
+        ratio_kfki = (kf/ki)
 
         # Appending to list: 
         kineticList.append(ratio_kfki)
