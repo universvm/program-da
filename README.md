@@ -7,4 +7,4 @@ The repository is divided in 2 folders which contain:
 
 `da`  everything related to the Data Analysys course
 
-Each folder is then divided in `checkpoints`. 
+Each folder is then divided in `checkpoints` which are located into folders 1-X.
